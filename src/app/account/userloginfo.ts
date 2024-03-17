@@ -1,6 +1,5 @@
-export class Accountinfo {
 
-  Name: string | any;
+export class Userloginfo {
   Email: string | any;
   Password: string | any;
 }

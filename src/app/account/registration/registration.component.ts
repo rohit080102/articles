@@ -1,35 +1,36 @@
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { AccountserviceService } from '../accountservice.service';
 import { Accountinfo } from '../accountinfo';
-
+import { Router } from "@angular/router";
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
-export class RegistrationComponent {
-  regForm: any | FormGroup
+export class RegistrationComponent implements OnInit {
+  regForm = new FormGroup({
+    Name: new FormControl('', [Validators.required]),
+    Email: new FormControl('', [Validators.required]),
+    Password: new FormControl('', [Validators.required]),
+  })
   datasaved = false;
-  massage: any | string;
-  constructor(private formbuilder: FormBuilder, private accountservice: AccountserviceService) { }
+  massage: string | any;
+  constructor(private formbuilder: FormBuilder, public accountservice: AccountserviceService, private router: Router) { }
 
   ngOnInit() {
     this.setFormState();
   }
   setFormState(): void {
-    this.regForm = this.formbuilder.group({
-      Name: ['', [Validators.required]],
-      Email: ['', [Validators.required]],
-      Password: ['', [Validators.required]]
-    })
+    this.regForm
   }
 
-  onSubmit() {
+  onSubmit = async () => {
 
-    let userinfo = this.regForm.value;
-    //console.log(userinfo);
+
+    let userinfo: any = this.regForm.value;
+    console.log(userinfo);
     this.createuserAccount(userinfo);
     this.regForm.reset();
   }
@@ -39,6 +40,7 @@ export class RegistrationComponent {
         this.datasaved = true;
         this.massage = "User Created";
         this.regForm.reset();
+        this.router.navigate(['/login']);
       }
     )
   }
