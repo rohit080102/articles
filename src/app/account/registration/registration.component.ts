@@ -35,7 +35,7 @@ export class RegistrationComponent implements OnInit {
     this.regForm.reset();
   }
   createuserAccount(accinfo: Accountinfo) {
-    this.accountservice.createaccount(accinfo).subscribe(
+    this.accountservice.register(accinfo).then(
       () => {
         this.datasaved = true;
         this.massage = "User Created";

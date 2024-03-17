@@ -1,6 +1,6 @@
 import { RefreshService } from './../../services/refresh.service';
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { AccountserviceService } from '../accountservice.service';
 import { Userloginfo } from '../userloginfo';
@@ -44,14 +44,14 @@ export class LoginComponent {
   }
 
   userLogin(logininfo: Userloginfo) {
-    this.accountservice.userlogin(logininfo).subscribe(
-      (resResult: any) => {
-        let resp = JSON.stringify(resResult);
+    this.accountservice.login(logininfo)
+      .then((response: any) => {
+        let resp = response;
         console.log(resp);
         this.datasaved = true;
-        this.message = resResult['msg'];
-        this.status = resResult['status'];
-        if (resResult['status'] == 'success') {
+        this.message = response['msg'];
+        this.status = response['status'];
+        if (response['status'] == 'success') {
           localStorage.setItem('Loginuser', resp)
         } else {
           localStorage.removeItem('Loginuser');
@@ -60,6 +60,6 @@ export class LoginComponent {
         this.router.navigate(["/"])
         this.refreshService.triggerRefresh();
       }
-    )
+      )
   }
 }

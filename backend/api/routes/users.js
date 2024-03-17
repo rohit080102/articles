@@ -120,6 +120,7 @@ router.post("/login", async (req, res, next) => {
         UserData: user,
         status: 'success'
       });
+
     } else {
       return res.status(200).json({
         msg: "Auth Failed",
