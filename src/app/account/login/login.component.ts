@@ -1,9 +1,14 @@
+import { AppStorage } from './../../core/utilities/app-storage';
+import { swalHelper } from './../../core/constants/swal-helper';
 import { RefreshService } from './../../services/refresh.service';
 import { Router } from '@angular/router';
 import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { AccountserviceService } from '../accountservice.service';
 import { Userloginfo } from '../userloginfo';
+import { ToastHelper } from 'src/app/core/constants/toast.helper';
+
+
 
 @Component({
   selector: 'app-login',
@@ -18,7 +23,8 @@ export class LoginComponent {
   constructor(private formbuilder: FormBuilder,
     private accountservice: AccountserviceService,
     private router: Router,
-    private refreshService: RefreshService) { }
+    private refreshService: RefreshService,
+    private appStorage: AppStorage) { }
 
   ngOnInit(): void {
     this.setFormState();
@@ -38,7 +44,6 @@ export class LoginComponent {
   onSubmit() {
 
     let userinfo: any = this.loginForm.value;
-    console.log(userinfo)
     this.userLogin(userinfo);
     // this.loginForm.reset();
   }
@@ -46,19 +51,19 @@ export class LoginComponent {
   userLogin(logininfo: Userloginfo) {
     this.accountservice.login(logininfo)
       .then((response: any) => {
-        let resp = response;
+        let resp: any = response.Data;
         console.log(resp);
-        this.datasaved = true;
-        this.message = response['msg'];
-        this.status = response['status'];
-        if (response['status'] == 'success') {
-          localStorage.setItem('Loginuser', resp)
-        } else {
-          localStorage.removeItem('Loginuser');
+
+        if (response.Data != 1) {
+          swalHelper.swalToast('success', response.Message, 'center')
+          this.appStorage.setLocalStorage('Loginuser', resp)
+          this.loginForm.reset();
+          this.router.navigate(["/"])
+          this.refreshService.triggerRefresh();
         }
-        this.loginForm.reset();
-        this.router.navigate(["/"])
-        this.refreshService.triggerRefresh();
+        else {
+          swalHelper.swalToast('warning', response.Message, 'center')
+        }
       }
       )
   }

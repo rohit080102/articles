@@ -8,7 +8,7 @@ export class AppStorage {
   constructor(private cookieService: SsrCookieService) { }
 
   public set = (key: string, value: any) => {
-    this.cookieService.set(key, JSON.stringify(value), {path: '/'});
+    this.cookieService.set(key, JSON.stringify(value), { path: '/' });
   };
 
   public get = (key: string) => {

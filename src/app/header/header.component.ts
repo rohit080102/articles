@@ -1,7 +1,8 @@
+import { swalHelper } from './../core/constants/swal-helper';
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { RefreshService } from '../services/refresh.service';
-
+import { AppStorage } from '../core/utilities/app-storage';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -22,7 +23,7 @@ export class HeaderComponent {
 
   }
 
-  constructor(private router: Router, private refreshService: RefreshService) {
+  constructor(private router: Router, private refreshService: RefreshService, private appStorage: AppStorage,) {
 
     if (localStorage.getItem('Loginuser')) {
       this.isloggedin = true;
@@ -56,11 +57,22 @@ export class HeaderComponent {
   ]
 
 
-  onLogout() {
-    localStorage.removeItem('Loginuser');
-    this.isloggedin = false;
-    this.router.navigate(['/']);
-  }
+  // onLogout() {
+  //   localStorage.removeItem('Loginuser');
+  //
+  // }
+
+  onLogout = () => {
+    swalHelper
+      .takeConfirmation('Logout', 'Do you really want to logout?', 'Logout')
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.appStorage.clearAll();
+          this.isloggedin = false;
+          this.router.navigate(['/']);
+        }
+      });
+  };
 
 
 }

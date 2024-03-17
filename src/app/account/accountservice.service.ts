@@ -22,43 +22,31 @@ export class AccountserviceService {
         { url: apiEndpoints.REGISTER, method: 'POST' },
         data,
       );
-      results = response;
-      if (response.status == 'success') {
+      console.log(response)
+      if (response.IsSuccess) {
+        return results = response
       }
-      return results;
     } catch (err) {
       return results;
     }
   }
 
   async login(data: any) {
-    let results: any = null;
+    let results: any = "";
     try {
       let response: any = await this.apiManager.request(
         { url: apiEndpoints.LOGIN, method: 'POST' },
         data,
       );
-      results = response;
       if (response.IsSuccess) {
         if (response.Data != 0) {
+          return results = response;
         }
       }
-      return results;
     } catch (err) {
-      return results;
+      console.log(err);
     }
   }
 
-
-
-
-  // createaccount(accinfo: Accountinfo): Observable<Accountinfo> {
-
-  //   return this.http.post<Accountinfo>(this.url + 'api/register', accinfo)
-  // }
-  // userlogin(logininfo: Userloginfo): Observable<Userloginfo> {
-
-  //   return this.http.post<Userloginfo>(this.url + 'api/login', logininfo)
-  // }
 
 }
